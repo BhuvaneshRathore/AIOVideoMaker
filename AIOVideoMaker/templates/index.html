@@ -354,12 +354,19 @@
       <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4">
           Uploaded Images
-          <span class="text-sm font-normal text-gray-500">(drag to reorder)</span>
+          <span class="text-sm font-normal text-gray-500"
+            >(drag to reorder)</span
+          >
         </h2>
-        <div id="sortable-gallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div
+          id="sortable-gallery"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+        >
           {% for image in images %}
           <div class="relative group cursor-move" data-image="{{ image }}">
-            <div class="h-32 w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100">
+            <div
+              class="h-32 w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100"
+            >
               <img
                 src="{{ url_for('uploaded_file', filename=image) }}"
                 alt="{{ image }}"
@@ -1547,50 +1554,54 @@
         });
 
         // Initialize the sortable gallery when the document is fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-          const gallery = document.getElementById('sortable-gallery');
-          
+        document.addEventListener("DOMContentLoaded", function () {
+          const gallery = document.getElementById("sortable-gallery");
+
           if (gallery) {
             // Initialize Sortable
             const sortable = new Sortable(gallery, {
               animation: 150,
-              ghostClass: 'bg-gray-100', // Ghost class for the item being dragged
-              onEnd: function(evt) {
+              ghostClass: "bg-gray-100", // Ghost class for the item being dragged
+              onEnd: function (evt) {
                 // When sorting is finished, save the new order
                 saveImageOrder();
-              }
+              },
             });
-            
+
             // Function to save the new order of images
             function saveImageOrder() {
               // Get all image elements
-              const imageElements = document.querySelectorAll('#sortable-gallery > div[data-image]');
-              
+              const imageElements = document.querySelectorAll(
+                "#sortable-gallery > div[data-image]"
+              );
+
               // Create an array of image names in the current order
-              const imageOrder = Array.from(imageElements).map(el => el.dataset.image);
-              
+              const imageOrder = Array.from(imageElements).map(
+                (el) => el.dataset.image
+              );
+
               // Send the new order to the server
-              fetch('/reorder_images', {
-                method: 'POST',
+              fetch("/reorder_images", {
+                method: "POST",
                 headers: {
-                  'Content-Type': 'application/json'
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  imageOrder: imageOrder
+                  imageOrder: imageOrder,
+                }),
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Failed to save image order");
+                  }
+                  return response.json();
                 })
-              })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error('Failed to save image order');
-                }
-                return response.json();
-              })
-              .then(data => {
-                console.log('Order saved successfully:', data);
-              })
-              .catch(error => {
-                console.error('Error saving order:', error);
-              });
+                .then((data) => {
+                  console.log("Order saved successfully:", data);
+                })
+                .catch((error) => {
+                  console.error("Error saving order:", error);
+                });
             }
           }
         });

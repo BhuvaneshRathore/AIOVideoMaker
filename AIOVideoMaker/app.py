@@ -158,23 +158,17 @@ def reorder_images():
     """Handle the reordering of images."""
     if request.method == 'POST':
         # Get the new order of images from the POST data
-        data = request.get_json()
-        new_order = data.get('imageOrder', [])
+        new_order = request.json.get('imageOrder', [])
         
         # For debugging
         print(f"Received new image order: {new_order}")
         
-        # Verify all images in the new order exist
-        img_folder = app.config['UPLOAD_FOLDER_img']
-        existing_images = os.listdir(img_folder)
-        valid_order = [img for img in new_order if img in existing_images]
-        
-        # Store the order in session
-        session['image_order'] = valid_order
-        
-        return jsonify({"status": "success"}), 200
+        # Store the order in a session or database if needed
+        # For now, we'll just return success
+        session['image_order'] = new_order  # Store in session
+        return {"status": "success"}, 200
     
-    return jsonify({"status": "error", "message": "Invalid request"}), 400
+    return {"status": "error", "message": "Invalid request"}, 400
 
 @app.route('/result')
 def result():
@@ -242,10 +236,7 @@ def generate():
         else:
             # Make sure the background directory is empty to indicate no background music
             for file in os.listdir(app.config['UPLOAD_FOLDER_background']):
-                os.remove(os.path.join(app.config['UPLOAD_FOLDER_background'], file))        # Get ordered images from session if available
-        ordered_images = session.get('image_order', None)
-        
-        # Generate the video with selected parameters
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER_background'], file))        # Generate the video with selected parameters
         print(f"============================================")
         print(f"Starting video generation with: Resolution={resolution_type}, Transition={transition_type}")
         print(f"First Transition={first_transition}, Last Transition={last_transition}")
@@ -265,8 +256,7 @@ def generate():
             watermark_opacity=watermark_opacity,
             watermark_size=watermark_size,
             custom_pos_x=custom_pos_x,
-            custom_pos_y=custom_pos_y,
-            ordered_images=ordered_images
+            custom_pos_y=custom_pos_y
         )
         # Make sure output_path exists
         if not os.path.exists(output_path):
