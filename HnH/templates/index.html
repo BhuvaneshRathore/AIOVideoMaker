@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slideshow Studio - Professional Video Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Sortable.js for drag and drop functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="https://unpkg.com/heroicons@1.0.6/outline"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .nav-item {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: #4b5563;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s;
+      }
+      .nav-item:hover {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+      }
+      .nav-item.active {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+      }
+      .step-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .step-active {
+        background-color: #2563eb;
+        color: white;
+      }
+      .step-complete {
+        background-color: #16a34a;
+        color: white;
+      }
+      .step-inactive {
+        background-color: #e5e7eb;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Modern navbar -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 py-3">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <div class="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-blue-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="ml-2 text-xl font-bold text-gray-800"
+            >Slideshow Studio</span
+          >
+        </div>
+        <div class="hidden md:flex space-x-1">
+          <a href="#" class="nav-item active">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            Create
+          </a>
+          <a href="#" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            Gallery
+          </a>
+          <a href="#" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+              />
+            </svg>
+            Settings
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+      <!-- Steps indicator -->
+      <div class="mb-10">
+        <div class="flex items-center justify-center">
+          <div class="flex flex-col items-center">
+            <div class="step-indicator step-active">1</div>
+            <span class="text-xs font-medium text-blue-600 mt-2">Upload</span>
+          </div>
+          <div class="w-12 h-1 bg-gray-200 mx-2"></div>
+          <div class="flex flex-col items-center">
+            <div class="step-indicator step-inactive">2</div>
+            <span class="text-xs font-medium text-gray-500 mt-2"
+              >Configure</span
+            >
+          </div>
+          <div class="w-12 h-1 bg-gray-200 mx-2"></div>
+          <div class="flex flex-col items-center">
+            <div class="step-indicator step-inactive">3</div>
+            <span class="text-xs font-medium text-gray-500 mt-2">Generate</span>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+        Create Your Slideshow
+      </h1>
+      <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+        Upload your images, add audio, and create a professional slideshow in
+        minutes. Choose from 4K or Instagram Reel formats.
+      </p>
+
+      <!-- Upload Method Selection -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Select Image Upload Method</h2>
+        <div class="flex space-x-4 mb-4">
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="individual"
+              name="upload-method"
+              value="individual"
+              checked
+              onchange="toggleUploadMethod()"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label for="individual" class="ml-2 text-gray-700"
+              >Upload Individual Images</label
+            >
+          </div>
+
+          <div class="flex items-center">
+            <input
+              type="radio"
+              id="directory"
+              name="upload-method"
+              value="directory"
+              onchange="toggleUploadMethod()"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+            />
+            <label for="directory" class="ml-2 text-gray-700"
+              >Upload Directory</label
+            >
+          </div>
+        </div>
+
+        <!-- Individual Upload -->
+        <div
+          id="individual-upload"
+          class="border border-gray-200 rounded-md p-4 bg-gray-50"
+          style="display: block"
+        >
+          <form
+            action="/upload"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-4"
+          >
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Select Images:</label
+              >
+              <input
+                type="file"
+                name="file"
+                multiple
+                accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Upload Images
+            </button>
+          </form>
+        </div>
+
+        <!-- Directory Upload -->
+        <div
+          id="directory-upload"
+          class="border border-gray-200 rounded-md p-4 bg-gray-50"
+          style="display: none"
+        >
+          <form
+            action="/upload_directory"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-4"
+          >
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Select Directory:</label
+              >
+              <input
+                type="file"
+                name="directory"
+                webkitdirectory
+                directory
+                multiple
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Upload Directory
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Special Images Section -->
+      <div
+        class="bg-blue-50 rounded-lg shadow-md p-6 mb-6 border border-blue-100"
+      >
+        <h3 class="text-xl font-semibold mb-2">
+          Special Images
+          <span class="text-sm font-normal text-gray-500">(Optional)</span>
+        </h3>
+        <p class="text-gray-600 mb-4">
+          These images will be used as the first and last images in your
+          slideshow
+        </p>
+
+        <form
+          action="/upload_special"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-4"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                for="firstphoto"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >First Image (firstphoto.jpg):</label
+              >
+              <input
+                type="file"
+                name="firstphoto"
+                id="firstphoto"
+                accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+
+            <div>
+              <label
+                for="endimage"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Last Image (endimage.jpg):</label
+              >
+              <input
+                type="file"
+                name="endimage"
+                id="endimage"
+                accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Upload Special Images
+          </button>
+        </form>
+      </div>
+
+      <!-- Uploaded Images Gallery -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">
+          Uploaded Images
+          <span class="text-sm font-normal text-gray-500">(drag to reorder)</span>
+        </h2>
+        <div id="sortable-gallery" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {% for image in images %}
+          <div class="relative group cursor-move" data-image="{{ image }}">
+            <div class="h-32 w-full flex items-center justify-center overflow-hidden rounded-md bg-gray-100">
+              <img
+                src="{{ url_for('uploaded_file', filename=image) }}"
+                alt="{{ image }}"
+                class="max-h-full max-w-full object-contain rounded-md"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all rounded-md flex items-center justify-center"
+            >
+              <a
+                href="/delete/{{ image }}"
+                class="opacity-0 group-hover:opacity-100 bg-red-500 text-white px-2 py-1 rounded-md text-xs hover:bg-red-600"
+                >Delete</a
+              >
+            </div>
+            {% if image == 'firstphoto.jpg' %}
+            <span
+              class="absolute top-1 left-1 bg-green-500 text-white text-xs px-2 py-1 rounded"
+              >First</span
+            >
+            {% elif image == 'endimage.jpg' %}
+            <span
+              class="absolute top-1 left-1 bg-purple-500 text-white text-xs px-2 py-1 rounded"
+              >Last</span
+            >
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Audio Upload and Generation -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Upload Audio Files</h2>
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          action="/generate"
+          class="space-y-6"
+        >
+          <div class="space-y-4">
+            <div>
+              <label
+                for="speech"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Upload Speech MP3 (Optional):</label
+              >
+              <input
+                type="file"
+                name="speech"
+                id="speech"
+                accept=".mp3"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+              />
+            </div>
+            <div>
+              <label
+                for="background"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Upload Background MP3 (Optional):</label
+              >
+              <input
+                type="file"
+                name="background"
+                id="background"
+                accept=".mp3"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+            </div>
+          </div>
+          <!-- Video Settings -->
+          <div
+            class="bg-gray-50 rounded-lg p-4 border border-gray-200 space-y-6"
+          >
+            <!-- Resolution Selection -->
+            <div>
+              <h3 class="text-lg font-medium mb-3">Select Video Resolution</h3>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    id="resolution4K"
+                    name="resolution_type"
+                    value="4K"
+                    checked
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="resolution4K" class="ml-2 text-gray-700"
+                    >4K Video
+                    <span class="text-xs text-gray-500">(16:9)</span></label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    id="resolution4KVertical"
+                    name="resolution_type"
+                    value="4K_Vertical"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="resolution4KVertical" class="ml-2 text-gray-700"
+                    >4K Vertical
+                    <span class="text-xs text-gray-500"
+                      >(9:16 High Def)</span
+                    ></label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="radio"
+                    id="resolutionReel"
+                    name="resolution_type"
+                    value="Reel"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label for="resolutionReel" class="ml-2 text-gray-700"
+                    >Instagram Reel
+                    <span class="text-xs text-gray-500"
+                      >(9:16 Standard)</span
+                    ></label
+                  >
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">
+                Select 4K for standard landscape videos, 4K Vertical for high
+                definition vertical videos, or Instagram Reel for standard
+                vertical videos.
+              </p>
+            </div>
+            <!-- Special Transitions for First and Last Images -->
+            <div class="border-t pt-6 border-gray-200">
+              <h3 class="text-lg font-medium mb-4">
+                <div class="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2 text-purple-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
+                  Special Image Transitions
+                </div>
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    First Image Transition
+                  </label>
+                  <select
+                    name="first_transition"
+                    id="first_transition"
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3"
+                    style="border: 1px solid #d1d5db; border-radius: 0.375rem"
+                  >
+                    <option value="">Same as Main Transition</option>
+                    <option value="fade">Smooth Fade</option>
+                    <option value="zoom_in">Zoom In</option>
+                    <option value="circular_reveal">Circular Reveal</option>
+                    <option value="film_grain_overlay">Film Grain</option>
+                    <option value="ken_burns">Ken Burns Effect</option>
+                    <option value="cinematic_letterbox">
+                      Cinematic Letterbox
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Last Image Transition
+                  </label>
+                  <select
+                    name="last_transition"
+                    id="last_transition"
+                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3"
+                    style="border: 1px solid #d1d5db; border-radius: 0.375rem"
+                  >
+                    <option value="">Same as Main Transition</option>
+                    <option value="fade">Smooth Fade</option>
+                    <option value="zoom_out">Zoom Out</option>
+                    <option value="vignette_fade">Vignette Fade</option>
+                    <option value="film_burn">Film Burn</option>
+                    <option value="cinematic_letterbox">
+                      Cinematic Letterbox
+                    </option>
+                    <option value="colorize">Colorize</option>
+                  </select>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-500 mb-6">
+                Apply special transitions to the first and last images (only
+                works when you've uploaded firstphoto.jpg and endimage.jpg).
+              </p>
+            </div>
+
+            <!-- Watermark Settings -->
+            <div class="border-t pt-6 border-gray-200">
+              <h3 class="text-lg font-medium mb-3">
+                <div class="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"
+                    />
+                  </svg>
+                  Watermark Settings
+                </div>
+              </h3>
+
+              <div
+                class="space-y-4 bg-gray-50 rounded-lg p-4 border border-gray-200"
+              >
+                <!-- Enable/Disable Watermark -->
+                <div>
+                  <div class="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      id="enable_watermark"
+                      name="enable_watermark"
+                      value="yes"
+                      class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                      onchange="toggleWatermarkOptions()"
+                    />
+                    <label
+                      for="enable_watermark"
+                      class="ml-2 text-gray-700 font-medium"
+                    >
+                      Enable Watermark
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500">
+                    Add a watermark logo to your video
+                  </p>
+                </div>
+
+                <!-- Watermark Options (initially hidden) -->
+                <div
+                  id="watermark_options"
+                  class="space-y-4"
+                  style="display: none"
+                >
+                  <!-- Watermark Selection -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Select Watermark Image
+                    </label>
+                    <select
+                      name="watermark_path"
+                      id="watermark_path"
+                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 py-2 px-3"
+                      style="border: 1px solid #d1d5db; border-radius: 0.375rem"
+                      onchange="updateWatermarkPreview()"
+                    >
+                      <option value="Tools/logo.PNG">Default Logo</option>
+                      {% if watermark_files %} {% for path, name in
+                      watermark_files %}
+                      <option value="{{ path }}">{{ name }}</option>
+                      {% endfor %} {% endif %}
+                    </select>
+                  </div>
+                  <!-- Upload Custom Watermark -->
+                  <div class="mt-2">
+                    <div class="mb-4">
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                      >
+                        Upload Custom Watermark
+                      </label>
+                      <div class="flex items-end space-x-2">
+                        <div class="flex-grow">
+                          <input
+                            type="file"
+                            id="watermark_file_input"
+                            accept=".png,.jpg,.jpeg"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onclick="uploadWatermark()"
+                          class="px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        >
+                          Upload
+                        </button>
+                      </div>
+                      <p
+                        id="watermark_upload_status"
+                        class="text-xs mt-1 hidden"
+                      ></p>
+                    </div>
+                  </div>
+
+                  <!-- Watermark Position -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Watermark Position
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_top_left"
+                          name="watermark_position"
+                          value="top-left"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_top_left" class="ml-2 text-gray-700"
+                          >Top Left</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_top_center"
+                          name="watermark_position"
+                          value="top-center"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_top_center" class="ml-2 text-gray-700"
+                          >Top Center</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_top_right"
+                          name="watermark_position"
+                          value="top-right"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_top_right" class="ml-2 text-gray-700"
+                          >Top Right</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_center_left"
+                          name="watermark_position"
+                          value="center-left"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_center_left" class="ml-2 text-gray-700"
+                          >Center Left</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_center"
+                          name="watermark_position"
+                          value="center"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_center" class="ml-2 text-gray-700"
+                          >Center</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_center_right"
+                          name="watermark_position"
+                          value="center-right"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_center_right" class="ml-2 text-gray-700"
+                          >Center Right</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_bottom_left"
+                          name="watermark_position"
+                          value="bottom-left"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_bottom_left" class="ml-2 text-gray-700"
+                          >Bottom Left</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_bottom_center"
+                          name="watermark_position"
+                          value="bottom-center"
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label
+                          for="pos_bottom_center"
+                          class="ml-2 text-gray-700"
+                          >Bottom Center</label
+                        >
+                      </div>
+                      <div class="flex items-center">
+                        <input
+                          type="radio"
+                          id="pos_bottom_right"
+                          name="watermark_position"
+                          value="bottom-right"
+                          checked
+                          class="h-4 w-4 text-green-600 focus:ring-green-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label for="pos_bottom_right" class="ml-2 text-gray-700"
+                          >Bottom Right</label
+                        >
+                      </div>
+                      <div class="flex items-center col-span-3 mt-2">
+                        <input
+                          type="radio"
+                          id="pos_custom"
+                          name="watermark_position"
+                          value="custom"
+                          class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                          onchange="updateWatermarkPreview()"
+                        />
+                        <label
+                          for="pos_custom"
+                          class="ml-2 text-gray-700 font-medium"
+                          >Custom Position</label
+                        >
+                      </div>
+                      <div
+                        id="custom_position_controls"
+                        class="col-span-3 grid grid-cols-2 gap-4 mt-1 ml-6"
+                        style="display: none"
+                      >
+                        <div>
+                          <label class="block text-xs text-gray-600"
+                            >X Position (%)</label
+                          >
+                          <div class="flex items-center">
+                            <input
+                              type="range"
+                              id="custom_pos_x"
+                              min="0"
+                              max="100"
+                              value="50"
+                              class="w-full"
+                              oninput="document.getElementById('custom_pos_x_value').textContent = this.value + '%'; updateWatermarkPreview();"
+                            />
+                            <span
+                              id="custom_pos_x_value"
+                              class="text-xs ml-2 w-10"
+                              >50%</span
+                            >
+                          </div>
+                        </div>
+                        <div>
+                          <label class="block text-xs text-gray-600"
+                            >Y Position (%)</label
+                          >
+                          <div class="flex items-center">
+                            <input
+                              type="range"
+                              id="custom_pos_y"
+                              min="0"
+                              max="100"
+                              value="50"
+                              class="w-full"
+                              oninput="document.getElementById('custom_pos_y_value').textContent = this.value + '%'; updateWatermarkPreview();"
+                            />
+                            <span
+                              id="custom_pos_y_value"
+                              class="text-xs ml-2 w-10"
+                              >50%</span
+                            >
+                          </div>
+                        </div>
+                        <input
+                          type="hidden"
+                          name="custom_pos_x_value"
+                          id="custom_pos_x_input"
+                          value="50"
+                        />
+                        <input
+                          type="hidden"
+                          name="custom_pos_y_value"
+                          id="custom_pos_y_input"
+                          value="50"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Watermark Opacity -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Watermark Opacity: <span id="opacity_value">70%</span>
+                    </label>
+                    <input
+                      type="range"
+                      id="watermark_opacity_slider"
+                      name="watermark_opacity"
+                      min="0.1"
+                      max="1.0"
+                      step="0.1"
+                      value="0.7"
+                      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      oninput="updateOpacityValue(this.value)"
+                    />
+                  </div>
+                  <!-- Watermark Size -->
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Watermark Size: <span id="size_value">Auto</span>
+                    </label>
+                    <div class="flex items-center space-x-2">
+                      <button
+                        type="button"
+                        id="size_auto_btn"
+                        class="text-xs px-2 py-1 bg-green-600 text-white font-medium rounded-md hover:bg-green-700"
+                        onclick="setAutoSize()"
+                      >
+                        Auto
+                      </button>
+                      <input
+                        type="range"
+                        id="watermark_size_slider"
+                        min="1"
+                        max="50"
+                        value="10"
+                        class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                        oninput="updateSizeValue(this.value)"
+                      />
+                      <input
+                        type="hidden"
+                        name="watermark_size"
+                        id="watermark_size"
+                        value="auto"
+                      />
+                    </div>
+                    <div
+                      class="flex justify-between text-xs text-gray-500 mt-1"
+                    >
+                      <span>1%</span>
+                      <span>25%</span>
+                      <span>50%</span>
+                    </div>
+                  </div>
+
+                  <!-- Watermark Preview -->
+                  <div
+                    class="mt-4 border border-gray-300 rounded-md p-4 bg-gray-50"
+                  >
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Watermark Preview
+                    </label>
+                    <div
+                      id="watermark_preview_container"
+                      class="relative bg-gray-800 rounded-md overflow-hidden"
+                      style="height: 200px; width: 356px; margin: 0 auto"
+                    >
+                      <div
+                        class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm"
+                      >
+                        <span id="preview_placeholder_text"
+                          >Preview will be shown here</span
+                        >
+                      </div>
+                      <div
+                        id="preview_resolution_indicator"
+                        class="absolute top-2 left-2 text-xs bg-black bg-opacity-50 text-white px-2 py-1 rounded-md"
+                        style="display: none"
+                      ></div>
+                      <img
+                        id="watermark_preview_image"
+                        class="absolute opacity-70"
+                        style="max-width: 30%; display: none"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      class="mt-2 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      onclick="updateWatermarkPreview()"
+                    >
+                      Update Preview
+                    </button>
+                    <p class="text-xs text-gray-500 mt-1">
+                      Click to update the preview with your current settings
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transition Effects -->
+            <div class="border-t pt-6 border-gray-200">
+              <h3 class="text-lg font-medium mb-3">
+                <div class="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 mr-2 text-indigo-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Select Main Transition Effect
+                </div>
+              </h3>
+              <div>
+                <select
+                  name="transition_type"
+                  id="transition_type"
+                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 px-3"
+                  style="
+                    border: 1px solid #d1d5db;
+                    border-radius: 0.375rem;
+                    height: 200px;
+                    size: 10;
+                  "
+                >
+                  <optgroup label="Basic Transitions">
+                    <option value="fade" selected>
+                      Smooth Fade (Cross Dissolve)
+                    </option>
+                    <option value="smooth_cross_fade">Smooth Cross Fade</option>
+                  </optgroup>
+
+                  <optgroup label="Directional Wipes">
+                    <option value="wipe_left">Wipe Left</option>
+                    <option value="wipe_right">Wipe Right</option>
+                    <option value="wipe_up">Wipe Up</option>
+                    <option value="wipe_down">Wipe Down</option>
+                    <option value="vertical_blinds">Vertical Blinds</option>
+                  </optgroup>
+
+                  <optgroup label="Zoom Effects">
+                    <option value="zoom_in">Zoom In</option>
+                    <option value="zoom_out">Zoom Out</option>
+                    <option value="zoom_push">Zoom Push</option>
+                    <option value="ken_burns">Ken Burns Effect</option>
+                  </optgroup>
+
+                  <optgroup label="Slide Transitions">
+                    <option value="slide_left">Slide Left</option>
+                    <option value="slide_right">Slide Right</option>
+                    <option value="sliding_panels">Sliding Panels</option>
+                    <option value="split_screen_slide">
+                      Split Screen Slide
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="Creative Reveals">
+                    <option value="circular_reveal">Circular Reveal</option>
+                    <option value="vignette_fade">Vignette Fade</option>
+                  </optgroup>
+
+                  <optgroup label="Digital Effects">
+                    <option value="pixelize">Pixelize</option>
+                    <option value="gaussian_blur">Gaussian Blur</option>
+                    <option value="glitch">Glitch Transition</option>
+                    <option value="rgb_channel_shift">RGB Channel Shift</option>
+                    <option value="prismatic_split">Prismatic Split</option>
+                    <option value="edge_detection_blend">
+                      Edge Detection Blend
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="Cinematic Effects">
+                    <option value="film_burn">Film Burn</option>
+                    <option value="film_grain_overlay">
+                      Film Grain Overlay
+                    </option>
+                    <option value="whip_pan">Whip Pan</option>
+                    <option value="cinematic_letterbox">
+                      Cinematic Letterbox
+                    </option>
+                    <option value="colorize">Colorize Transition</option>
+                  </optgroup>
+
+                  <optgroup label="Dynamic Effects">
+                    <option value="wave_distortion">Wave Distortion</option>
+                    <option value="ripple">Ripple Effect</option>
+                  </optgroup>
+
+                  <optgroup label="Random">
+                    <option value="random">Random (Different Each Time)</option>
+                  </optgroup>
+                </select>
+                <p class="text-xs text-gray-500 mt-2">
+                  Choose a professional transition effect to apply between
+                  images for a polished look.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-md hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+          >
+            Generate Slideshow
+          </button>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center text-gray-500 text-sm mt-8">
+        <p>
+          © Created by
+          <a href="" target="_blank" class="text-blue-600 hover:underline"
+            >Bhuvanesh</a
+          >
+        </p>
+      </footer>
+      <script>
+        function toggleUploadMethod() {
+          const individualMethod =
+            document.getElementById("individual").checked;
+          document.getElementById("individual-upload").style.display =
+            individualMethod ? "block" : "none";
+          document.getElementById("directory-upload").style.display =
+            individualMethod ? "none" : "block";
+        }
+
+        function toggleWatermarkOptions() {
+          const enableWatermark =
+            document.getElementById("enable_watermark").checked;
+          document.getElementById("watermark_options").style.display =
+            enableWatermark ? "block" : "none";
+        }
+        function updateOpacityValue(value) {
+          document.getElementById("opacity_value").innerText =
+            Math.round(value * 100) + "%";
+        }
+
+        function updateSizeValue(value) {
+          // Update the display value
+          document.getElementById("size_value").innerText = value + "%";
+
+          // Update the hidden input with the decimal value (e.g., 10% = 0.10)
+          const decimalValue = parseFloat(value) / 100;
+          document.getElementById("watermark_size").value =
+            decimalValue.toString();
+
+          // Update the auto button style
+          document
+            .getElementById("size_auto_btn")
+            .classList.remove("bg-green-600");
+          document.getElementById("size_auto_btn").classList.add("bg-gray-400");
+
+          // Update the preview
+          updateWatermarkPreview();
+        }
+
+        function setAutoSize() {
+          // Set the display value to "Auto"
+          document.getElementById("size_value").innerText = "Auto";
+
+          // Set the hidden input to "auto"
+          document.getElementById("watermark_size").value = "auto";
+
+          // Update the auto button style
+          document
+            .getElementById("size_auto_btn")
+            .classList.remove("bg-gray-400");
+          document
+            .getElementById("size_auto_btn")
+            .classList.add("bg-green-600");
+
+          // Update the preview
+          updateWatermarkPreview();
+        }
+
+        function uploadWatermark() {
+          const fileInput = document.getElementById("watermark_file_input");
+          const statusElem = document.getElementById("watermark_upload_status");
+
+          if (!fileInput.files || fileInput.files.length === 0) {
+            statusElem.textContent = "Please select a file first";
+            statusElem.className = "text-xs mt-1 text-red-500";
+            statusElem.style.display = "block";
+            return;
+          }
+
+          const file = fileInput.files[0];
+          if (!file.type.match("image/(png|jpeg|jpg)")) {
+            statusElem.textContent = "Only PNG and JPG/JPEG images are allowed";
+            statusElem.className = "text-xs mt-1 text-red-500";
+            statusElem.style.display = "block";
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("watermark_file", file);
+
+          statusElem.textContent = "Uploading...";
+          statusElem.className = "text-xs mt-1 text-blue-500";
+          statusElem.style.display = "block";
+
+          fetch("/upload_watermark", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (response.ok) {
+                statusElem.textContent = "Upload successful! Refreshing...";
+                statusElem.className = "text-xs mt-1 text-green-500";
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              } else {
+                statusElem.textContent = "Upload failed. Please try again.";
+                statusElem.className = "text-xs mt-1 text-red-500";
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              statusElem.textContent = "Upload failed. Please try again.";
+              statusElem.className = "text-xs mt-1 text-red-500";
+            });
+        }
+        function updateWatermarkPreview() {
+          // Prevent recursive calls when updating dimensions
+          if (window.isUpdatingDimensions) return;
+
+          // Check if watermark is enabled
+          const enableWatermark = document.getElementById("enable_watermark");
+          if (enableWatermark && !enableWatermark.checked) {
+            // If watermark is disabled, don't show anything
+            const previewImg = document.getElementById(
+              "watermark_preview_image"
+            );
+            const placeholderText = document.getElementById(
+              "preview_placeholder_text"
+            );
+            const resolutionIndicator = document.getElementById(
+              "preview_resolution_indicator"
+            );
+
+            previewImg.style.display = "none";
+            placeholderText.textContent = "Watermark disabled";
+            placeholderText.style.display = "block";
+            resolutionIndicator.style.display = "none";
+
+            // Still update container dimensions
+            const selectedResolution = document.querySelector(
+              'input[name="resolution_type"]:checked'
+            ).value;
+            window.isUpdatingDimensions = true;
+            updatePreviewContainerDimensions(selectedResolution);
+            window.isUpdatingDimensions = false;
+            return;
+          }
+
+          // Toggle custom position controls visibility
+          const customPositionRadio = document.getElementById("pos_custom");
+          const customPositionControls = document.getElementById(
+            "custom_position_controls"
+          );
+          if (customPositionControls) {
+            customPositionControls.style.display =
+              customPositionRadio && customPositionRadio.checked
+                ? "grid"
+                : "none";
+          }
+
+          // Get selected watermark
+          const watermarkSelect = document.getElementById("watermark_path");
+          const selectedWatermark = watermarkSelect.value;
+
+          // Get position
+          let selectedPosition = document.querySelector(
+            'input[name="watermark_position"]:checked'
+          );
+          if (!selectedPosition) {
+            selectedPosition = { value: "bottom-right" }; // Default if none selected
+          }
+
+          // Get opacity
+          const opacity = document.getElementById(
+            "watermark_opacity_slider"
+          ).value;
+          // Get size
+          const sizeInput = document.getElementById("watermark_size");
+          const selectedSize = sizeInput.value;
+
+          // Get selected resolution
+          const selectedResolution = document.querySelector(
+            'input[name="resolution_type"]:checked'
+          ).value;
+
+          // Get container and image elements
+          const container = document.getElementById(
+            "watermark_preview_container"
+          );
+          const previewImg = document.getElementById("watermark_preview_image");
+          const placeholderText = document.getElementById(
+            "preview_placeholder_text"
+          );
+          const resolutionIndicator = document.getElementById(
+            "preview_resolution_indicator"
+          );
+          // Set container dimensions based on resolution
+          if (!window.isUpdatingDimensions) {
+            window.isUpdatingDimensions = true;
+            updatePreviewContainerDimensions(selectedResolution);
+            window.isUpdatingDimensions = false;
+          }
+
+          // Load the watermark image
+          if (selectedWatermark) {
+            // Show the image and set opacity
+            previewImg.style.display = "block";
+            placeholderText.style.display = "none";
+            resolutionIndicator.style.display = "block";
+            previewImg.style.opacity = opacity;
+            // Only update the source if it's a new image or first load
+            if (
+              !previewImg.src.includes(selectedWatermark) ||
+              previewImg.dataset.initialLoad !== "true"
+            ) {
+              // Set the src attribute to the watermark path
+              previewImg.src = "/" + selectedWatermark;
+              previewImg.dataset.initialLoad = "true";
+            }
+
+            // Set the position
+            previewImg.style.top = "auto";
+            previewImg.style.bottom = "auto";
+            previewImg.style.left = "auto";
+            previewImg.style.right = "auto";
+            previewImg.style.transform = "none"; // Reset transformations
+
+            // Get watermark dimensions to calculate proper positioning
+            const watermarkWidth =
+              previewImg.offsetWidth ||
+              container.offsetWidth *
+                (selectedSize === "auto"
+                  ? 0.2
+                  : parseFloat(selectedSize) / 100);
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            // Calculate margin based on container size (similar to generate.py logic)
+            const marginPx = Math.max(10, containerWidth * 0.025);
+
+            // Position classes - Matching the logic in generate.py
+            if (selectedPosition.value === "top-left") {
+              previewImg.style.top = marginPx + "px";
+              previewImg.style.left = marginPx + "px";
+            } else if (selectedPosition.value === "top-center") {
+              previewImg.style.top = marginPx + "px";
+              previewImg.style.left = "50%";
+              previewImg.style.transform = "translateX(-50%)";
+            } else if (selectedPosition.value === "top-right") {
+              previewImg.style.top = marginPx + "px";
+              previewImg.style.right = marginPx + "px";
+            } else if (selectedPosition.value === "center-left") {
+              previewImg.style.top = "50%";
+              previewImg.style.left = marginPx + "px";
+              previewImg.style.transform = "translateY(-50%)";
+            } else if (selectedPosition.value === "center") {
+              previewImg.style.top = "50%";
+              previewImg.style.left = "50%";
+              previewImg.style.transform = "translate(-50%, -50%)";
+            } else if (selectedPosition.value === "center-right") {
+              previewImg.style.top = "50%";
+              previewImg.style.right = marginPx + "px";
+              previewImg.style.transform = "translateY(-50%)";
+            } else if (selectedPosition.value === "bottom-left") {
+              previewImg.style.bottom = marginPx + "px";
+              previewImg.style.left = marginPx + "px";
+            } else if (selectedPosition.value === "bottom-center") {
+              previewImg.style.bottom = marginPx + "px";
+              previewImg.style.left = "50%";
+              previewImg.style.transform = "translateX(-50%)";
+            } else if (selectedPosition.value === "custom") {
+              // Get custom position values from sliders
+              const xPos = document.getElementById("custom_pos_x").value;
+              const yPos = document.getElementById("custom_pos_y").value;
+
+              // Convert percentage to position that accounts for watermark dimensions
+              // This better matches how the actual code in generate.py works
+              const xPosPercent = parseFloat(xPos) / 100;
+              const yPosPercent = parseFloat(yPos) / 100;
+
+              // Set position - using percentage directly for preview
+              previewImg.style.left = xPos + "%";
+              previewImg.style.top = yPos + "%";
+              previewImg.style.transform = "translate(-50%, -50%)";
+
+              // Update hidden inputs for form submission
+              document.getElementById("custom_pos_x_input").value = xPos;
+              document.getElementById("custom_pos_y_input").value = yPos;
+            } else {
+              // Default to bottom-right
+              previewImg.style.bottom = marginPx + "px";
+              previewImg.style.right = marginPx + "px";
+            }
+
+            // Set size based on selection
+            if (selectedSize === "auto") {
+              previewImg.style.maxWidth = "20%";
+            } else {
+              // Convert to percentage for display
+              let sizePercent;
+              if (parseFloat(selectedSize) <= 1) {
+                // Handle decimal values (older format 0.05 to 0.5)
+                sizePercent = parseFloat(selectedSize) * 100;
+              } else {
+                // Handle integer percentages (new format 1 to 50)
+                sizePercent = parseFloat(selectedSize);
+              }
+              previewImg.style.maxWidth = sizePercent + "%";
+            }
+          } else {
+            previewImg.style.display = "none";
+          }
+        }
+
+        // Function to update preview container dimensions based on resolution
+        function updatePreviewContainerDimensions(resolutionType) {
+          const container = document.getElementById(
+            "watermark_preview_container"
+          );
+          const resolutionIndicator = document.getElementById(
+            "preview_resolution_indicator"
+          );
+          const previewWidth = 356; // Base preview width in pixels
+          let previewHeight,
+            videoWidth,
+            videoHeight,
+            aspectRatio,
+            containerWidth,
+            containerHeight;
+
+          // Set dimensions based on resolution type
+          if (resolutionType === "Reel") {
+            // Instagram Reel (9:16)
+            videoWidth = 1080;
+            videoHeight = 1920;
+            aspectRatio = 9 / 16; // Portrait (width/height)
+
+            // Set preview container style with fixed width and calculated height
+            containerWidth = previewWidth;
+            containerHeight = Math.round(previewWidth / aspectRatio);
+
+            container.style.width = containerWidth + "px";
+            container.style.height = containerHeight + "px";
+            resolutionIndicator.textContent = "Instagram Reel (1080×1920)";
+          } else if (resolutionType === "4K_Vertical") {
+            // 4K Vertical (9:16)
+            videoWidth = 2160;
+            videoHeight = 3840;
+            aspectRatio = 9 / 16; // Portrait (width/height)
+
+            // Set preview container style
+            containerWidth = previewWidth;
+            containerHeight = Math.round(previewWidth / aspectRatio);
+
+            container.style.width = containerWidth + "px";
+            container.style.height = containerHeight + "px";
+            resolutionIndicator.textContent = "4K Vertical (2160×3840)";
+          } else {
+            // Default 4K (16:9)
+            videoWidth = 3840;
+            videoHeight = 2160;
+            aspectRatio = 16 / 9; // Landscape (width/height)
+
+            // Set preview container style
+            containerWidth = previewWidth;
+            containerHeight = Math.round(previewWidth / aspectRatio);
+
+            container.style.width = containerWidth + "px";
+            container.style.height = containerHeight + "px";
+            resolutionIndicator.textContent = "4K (3840×2160)";
+          }
+          // If we've already loaded a watermark image, update its position after container dimensions change
+          // But avoid recursive calls by checking if this was called from updateWatermarkPreview
+          if (!window.isUpdatingWatermark) {
+            setTimeout(function () {
+              const previewImg = document.getElementById(
+                "watermark_preview_image"
+              );
+              if (previewImg && previewImg.style.display !== "none") {
+                window.isUpdatingWatermark = true;
+                updateWatermarkPreview();
+                window.isUpdatingWatermark = false;
+              }
+            }, 200);
+          }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          // Initialize watermark options visibility
+          toggleWatermarkOptions();
+
+          // Initialize opacity display value
+          const opacitySlider = document.getElementById(
+            "watermark_opacity_slider"
+          );
+          if (opacitySlider) {
+            updateOpacityValue(opacitySlider.value);
+          }
+
+          // Initialize custom position controls visibility
+          const customPositionRadio = document.getElementById("pos_custom");
+          const customPositionControls = document.getElementById(
+            "custom_position_controls"
+          );
+          if (customPositionControls && customPositionRadio) {
+            customPositionControls.style.display = customPositionRadio.checked
+              ? "grid"
+              : "none";
+          }
+
+          // Initialize size value to auto by default
+          setAutoSize();
+
+          // Add event listeners to resolution radio buttons
+          const resolutionRadios = document.querySelectorAll(
+            'input[name="resolution_type"]'
+          );
+          resolutionRadios.forEach((radio) => {
+            radio.addEventListener("change", updateWatermarkPreview);
+          });
+
+          // Initialize preview container with current resolution
+          const initialResolution = document.querySelector(
+            'input[name="resolution_type"]:checked'
+          ).value;
+          updatePreviewContainerDimensions(initialResolution);
+
+          // Setup event listeners for watermark position options
+          const positionRadios = document.querySelectorAll(
+            'input[name="watermark_position"]'
+          );
+          positionRadios.forEach((radio) => {
+            radio.addEventListener("change", updateWatermarkPreview);
+          });
+          // Setup event listener for opacity slider
+          if (opacitySlider) {
+            opacitySlider.addEventListener("input", function () {
+              updateWatermarkPreview();
+            });
+          }
+
+          // Setup event listener for enable_watermark checkbox
+          const enableWatermarkCheckbox =
+            document.getElementById("enable_watermark");
+          if (enableWatermarkCheckbox) {
+            enableWatermarkCheckbox.addEventListener("change", function () {
+              updateWatermarkPreview();
+            });
+          }
+
+          // Initial preview
+          setTimeout(updateWatermarkPreview, 500);
+        });
+
+        // Initialize the sortable gallery when the document is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          const gallery = document.getElementById('sortable-gallery');
+          
+          if (gallery) {
+            // Initialize Sortable
+            const sortable = new Sortable(gallery, {
+              animation: 150,
+              ghostClass: 'bg-gray-100', // Ghost class for the item being dragged
+              onEnd: function(evt) {
+                // When sorting is finished, save the new order
+                saveImageOrder();
+              }
+            });
+            
+            // Function to save the new order of images
+            function saveImageOrder() {
+              // Get all image elements
+              const imageElements = document.querySelectorAll('#sortable-gallery > div[data-image]');
+              
+              // Create an array of image names in the current order
+              const imageOrder = Array.from(imageElements).map(el => el.dataset.image);
+              
+              // Send the new order to the server
+              fetch('/reorder_images', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  imageOrder: imageOrder
+                })
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Failed to save image order');
+                }
+                return response.json();
+              })
+              .then(data => {
+                console.log('Order saved successfully:', data);
+              })
+              .catch(error => {
+                console.error('Error saving order:', error);
+              });
+            }
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

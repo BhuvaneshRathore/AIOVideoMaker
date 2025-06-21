@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Slideshow Generator - Your Video Is Ready</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background: #f5f8fa;
+        color: #333;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh; /* Ensure container takes at least full viewport height */
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .video-container {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        padding: 25px;
+        margin-bottom: 40px;
+        position: relative;
+        min-height: 600px; /* Ensure enough space for actions section */
+        overflow: visible; /* Allow content to be visible outside container */
+      }
+
+      video {
+        width: 100%;
+        max-height: 60vh; /* Reduced from 70vh to leave more space for buttons */
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 50px; /* Increased space before buttons */
+        border-radius: 6px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Add a clear divider between video and buttons */
+      .video-container::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 5px;
+        background-color: #e74c3c; /* More visible divider */
+        margin: 20px 0 30px 0;
+        border-radius: 3px;
+      }
+
+      /* Add a background highlight for the buttons section */
+      .action-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 25px;
+        border: 2px solid #e0e0e0;
+        position: relative;
+        z-index: 100;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        clear: both;
+        display: block;
+      }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+        padding: 20px 0;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Add emphasis to the action area */
+      .action-area {
+        margin-top: 80px;
+        position: relative;
+      }
+
+      .btn {
+        padding: 16px 32px;
+        border: 2px solid;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: all 0.3s;
+        min-width: 220px;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-primary {
+        background: #e74c3c;
+        border-color: #c0392b;
+        color: white !important;
+      }
+
+      .btn-primary:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-secondary {
+        background: #2ecc71;
+        border-color: #27ae60;
+        color: white !important;
+      }
+
+      .btn-secondary:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 40px;
+        color: #7f8c8d;
+        font-size: 14px;
+      } /* Default styles ensure visibility at 100% zoom */
+      @media screen {
+        .buttons::before {
+          content: "Actions:";
+          display: block;
+          text-align: center;
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 15px;
+          color: #333;
+        }
+      }
+
+      /* For mobile devices */
+      @media (max-width: 768px) {
+        .buttons {
+          flex-direction: column;
+          align-items: center;
+          padding: 30px 0;
+        }
+
+        .btn {
+          width: 90%;
+          margin-bottom: 20px;
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Video Slideshow Generator</h1>
+        <p>Your video has been successfully created!</p>
+      </div>
+
+      <div class="success-message">
+        <p>
+          ✅ Video generation complete. You can now view and download your
+          video.
+        </p>
+      </div>
+      <div class="video-container">
+        <video controls autoplay>
+          <source
+            src="{{ url_for('static', filename='final_output.mp4') }}"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Separate the action section from the video container for better visibility -->
+      <div class="action-section">
+        <h2
+          style="
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+          "
+        >
+          Available Actions
+        </h2>
+        <div class="buttons">
+          <a
+            href="{{ url_for('static', filename='final_output.mp4') }}"
+            download
+            class="btn btn-primary"
+          >
+            <strong>⬇️ Download Video</strong>
+          </a>
+          <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <strong>➕ Create Another</strong>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>© 2025 Video Slideshow Generator. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>
