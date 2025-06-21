@@ -19,7 +19,8 @@ import colorsys
 
 def generatex(resolution_type="4K", transition_type="fade", first_transition=None, last_transition=None,
            enable_watermark=False, watermark_path="Tools/logo.PNG", watermark_position="bottom-right", 
-           watermark_opacity=0.7, watermark_size="auto", custom_pos_x=None, custom_pos_y=None, ordered_images=None):
+           watermark_opacity=0.7, watermark_size="auto", custom_pos_x=None, custom_pos_y=None, ordered_images=None,
+           frame_rate=60, image_display_duration=1000, transition_duration=60):
     """Generate a video slideshow from images with transitions, audio, and optional watermark.
     
     Args:
@@ -33,6 +34,9 @@ def generatex(resolution_type="4K", transition_type="fade", first_transition=Non
         ordered_images (list, optional): List of image filenames in the order they should appear in the slideshow
         watermark_opacity (float): Opacity of the watermark (0.0 to 1.0)
         watermark_size (str): Size of watermark ('auto', 'tiny', 'small', 'medium', 'large', 'xlarge', or float between 0.01 and 0.5)
+        frame_rate (int): Frame rate for the output video (24-120 fps)
+        image_display_duration (int): How long each image is displayed in milliseconds
+        transition_duration (int): Duration of transitions between images in frames
     """
     # Use default transition if special ones not specified
     first_transition = first_transition or transition_type
@@ -68,9 +72,8 @@ def generatex(resolution_type="4K", transition_type="fade", first_transition=Non
         print(f"Creating 4K format video ({video_width}x{video_height}) - Optimal for YouTube")
     
     # Video settings
-    frame_rate = 60       # Higher frame rate for smoother transitions
-    image_display_duration = 1000  # milliseconds (1 second)
-    transition_duration = 60       # Increased for smoother 4K transitions
+    # The frame_rate, image_display_duration, and transition_duration are now parameters
+    # Default values are used if not provided through the UI
       # Higher quality video encoding with resolution type in filename
     temp_video_path = f"temp_{resolution_type}_video.mp4"
     final_output_path = "static/final_output.mp4"

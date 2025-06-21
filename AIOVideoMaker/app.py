@@ -240,6 +240,19 @@ def generate():
         print(f"============================================")
         print(f"Starting video generation with: Resolution={resolution_type}, Transition={transition_type}")
         print(f"First Transition={first_transition}, Last Transition={last_transition}")
+        
+        # Get timing parameters with defaults
+        frame_rate = int(request.form.get('frame_rate', 60))
+        image_display_duration = int(request.form.get('image_display_duration', 1000))
+        transition_duration = int(request.form.get('transition_duration', 60))
+        
+        # Validate timing settings
+        frame_rate = max(24, min(120, frame_rate))  # Between 24 and 120 fps
+        image_display_duration = max(500, min(10000, image_display_duration))  # Between 0.5 and 10 seconds
+        transition_duration = max(15, min(240, transition_duration))  # Between 15 and 240 frames
+        
+        print(f"Timing settings: Frame rate={frame_rate}fps, Display duration={image_display_duration}ms, Transition duration={transition_duration} frames")
+        
         if enable_watermark:
             print(f"Watermark enabled: {watermark_path}, Position: {watermark_position}, Opacity: {watermark_opacity}")
         else:
@@ -256,7 +269,10 @@ def generate():
             watermark_opacity=watermark_opacity,
             watermark_size=watermark_size,
             custom_pos_x=custom_pos_x,
-            custom_pos_y=custom_pos_y
+            custom_pos_y=custom_pos_y,
+            frame_rate=frame_rate,
+            image_display_duration=image_display_duration,
+            transition_duration=transition_duration
         )
         # Make sure output_path exists
         if not os.path.exists(output_path):
