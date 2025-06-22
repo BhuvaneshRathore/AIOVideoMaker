@@ -86,8 +86,7 @@ def generatex(resolution_type="4K", transition_type="fade", first_transition=Non
     mp3_files_speech = glob.glob(os.path.join(directory_speech, "*.mp3"))
     speech_audio_path = mp3_files_speech[0] if mp3_files_speech else None
     print(f"Speech audio: {speech_audio_path}")
-    
-    # Set up video writer with H.264 codec for better quality
+      # Set up video writer with H.264 codec for better quality
     fourcc = cv2.VideoWriter_fourcc(*'H264') if cv2.VideoWriter_fourcc(*'H264') else cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter(
         temp_video_path, 
@@ -95,15 +94,16 @@ def generatex(resolution_type="4K", transition_type="fade", first_transition=Non
         frame_rate, 
         (video_width, video_height)
     )
-      # Get image files
+    # Get image files
     image_files = []
-    
     if ordered_images:
         # Use the ordered images provided by the user
         print("Using custom image order from user arrangement")
+        print(f"Ordered images received: {ordered_images}")
         
         # Validate that all ordered images exist
         valid_ordered_images = [img for img in ordered_images if os.path.exists(os.path.join(image_directory, img))]
+        print(f"Valid ordered images (exist in directory): {valid_ordered_images}")
         
         # Check if there are any images in the directory that aren't in the ordered list
         all_valid_images = [
@@ -111,9 +111,12 @@ def generatex(resolution_type="4K", transition_type="fade", first_transition=Non
             if f.lower().endswith(('.jpg', '.png', '.jpeg', '.webp'))
         ]
         missing_images = [img for img in all_valid_images if img not in valid_ordered_images]
+        if missing_images:
+            print(f"Images in directory not in ordered list: {missing_images}")
         
         # Use the ordered images first, then add any missing images
         image_files = valid_ordered_images + missing_images
+        print(f"Final image order to be processed: {image_files}")
     else:
         # Use default ordering with special handling for first and last images
         

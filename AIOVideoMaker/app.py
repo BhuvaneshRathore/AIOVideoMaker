@@ -161,11 +161,14 @@ def reorder_images():
         new_order = request.json.get('imageOrder', [])
         
         # For debugging
+        print(f"============================================")
         print(f"Received new image order: {new_order}")
         
-        # Store the order in a session or database if needed
-        # For now, we'll just return success
+        # Store the order in the session
         session['image_order'] = new_order  # Store in session
+        print(f"Image order saved to session: {new_order}")
+        print(f"============================================")
+        
         return {"status": "success"}, 200
     
     return {"status": "error", "message": "Invalid request"}, 400
@@ -246,12 +249,17 @@ def generate():
         image_display_duration = int(request.form.get('image_display_duration', 1000))
         transition_duration = int(request.form.get('transition_duration', 60))
         
-        # Validate timing settings
-        frame_rate = max(24, min(120, frame_rate))  # Between 24 and 120 fps
+        # Validate timing settings        frame_rate = max(24, min(120, frame_rate))  # Between 24 and 120 fps
         image_display_duration = max(500, min(10000, image_display_duration))  # Between 0.5 and 10 seconds
         transition_duration = max(15, min(240, transition_duration))  # Between 15 and 240 frames
-        
         print(f"Timing settings: Frame rate={frame_rate}fps, Display duration={image_display_duration}ms, Transition duration={transition_duration} frames")
+        
+        # Get user-ordered images from session if available
+        ordered_images = session.get('image_order', None)
+        if ordered_images:
+            print(f"Using custom image order from session: {ordered_images}")
+        else:
+            print("No custom image order found, using default order")
         
         if enable_watermark:
             print(f"Watermark enabled: {watermark_path}, Position: {watermark_position}, Opacity: {watermark_opacity}")
@@ -272,7 +280,8 @@ def generate():
             custom_pos_y=custom_pos_y,
             frame_rate=frame_rate,
             image_display_duration=image_display_duration,
-            transition_duration=transition_duration
+            transition_duration=transition_duration,
+            ordered_images=ordered_images
         )
         # Make sure output_path exists
         if not os.path.exists(output_path):
