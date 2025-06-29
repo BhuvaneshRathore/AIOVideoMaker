@@ -1,0 +1,798 @@
+/* Enhanced Styling for AIOVideoMaker */
+
+/* ===== TAB CONTENT VISIBILITY CONTROLS ===== */
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+#video-creation-tab {
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* ===== FRAME RATE SLIDER IMPROVEMENTS ===== */
+input[type="range"].enhanced-slider {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 10px; /* Specified height */
+  border-radius: 10px; /* Rounded corners */
+  background: linear-gradient(
+    to right,
+    #3b82f6,
+    #93c5fd
+  ); /* Blue gradient background */
+  outline: none; /* Remove outline */
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2); /* Subtle shadow */
+  transition: all 0.3s ease-in-out;
+  margin: 15px 0;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="range"].enhanced-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 22px; /* Width of thumb */
+  height: 22px; /* Height of thumb */
+  border-radius: 50%; /* Circular thumb */
+  background: white; /* White background */
+  border: 3px solid #3b82f6; /* Blue border */
+  cursor: pointer; /* Cursor on hover */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4); /* Shadow effect */
+  transition: all 0.2s ease-in-out; /* Smooth transition */
+  position: relative;
+  z-index: 2;
+}
+
+input[type="range"].enhanced-slider::-moz-range-thumb {
+  width: 22px; /* Width of thumb */
+  height: 22px; /* Height of thumb */
+  border-radius: 50%; /* Circular thumb */
+  background: white; /* White background */
+  border: 3px solid #3b82f6; /* Blue border */
+  cursor: pointer; /* Cursor on hover */
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4); /* Shadow effect */
+  transition: all 0.2s ease-in-out; /* Smooth transition */
+  position: relative;
+  z-index: 2;
+}
+
+input[type="range"].enhanced-slider::-webkit-slider-thumb:hover,
+input[type="range"].enhanced-slider::-moz-range-thumb:hover {
+  transform: scale(1.2); /* Grow on hover */
+  background: #f0f9ff; /* Light blue hover color */
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.6); /* Enhanced shadow */
+}
+
+input[type="range"].enhanced-slider:active::-webkit-slider-thumb,
+input[type="range"].enhanced-slider:active::-moz-range-thumb {
+  transform: scale(1.1); /* Slightly smaller when active */
+  background: #3b82f6; /* Blue when active */
+  border-color: white; /* White border when active */
+}
+
+/* Value bubble for sliders */
+.slider-container {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.slider-value {
+  position: absolute;
+  top: -30px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.slider-container:hover .slider-value {
+  opacity: 1;
+  top: -35px;
+}
+
+/* Visual active state for sliders */
+.slider-container.active .slider-track {
+  height: 12px;
+  background: linear-gradient(to right, #2563eb, #60a5fa);
+}
+
+/* Slider track highlight */
+.slider-track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(
+    to right,
+    #3b82f6 0%,
+    #3b82f6 var(--value-percent, 50%),
+    #e5e7eb var(--value-percent, 50%),
+    #e5e7eb 100%
+  );
+  transition: height 0.2s ease;
+  z-index: 1;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Slider labels */
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Value update animation with a focus color change */
+@keyframes highlight-value {
+  0% {
+    transform: scale(1);
+    color: #3b82f6;
+  }
+  50% {
+    transform: scale(1.2);
+    color: #2563eb;
+  }
+  100% {
+    transform: scale(1);
+    color: inherit;
+  }
+}
+
+.value-updated {
+  animation: highlight-value 0.6s ease-out;
+}
+
+/* Larger value display */
+.value-display {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  transition: all 0.3s ease;
+  display: inline-block;
+  min-width: 48px;
+  text-align: center;
+}
+
+/* ===== FIRST/LAST TRANSITION SECTION IMPROVEMENTS ===== */
+.transition-card {
+  border-radius: 12px;
+  border: 1px solid rgba(147, 197, 253, 0.4);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.9),
+    rgba(243, 244, 246, 0.8)
+  );
+  backdrop-filter: blur(8px);
+}
+
+.transition-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.05);
+  border-color: rgba(96, 165, 250, 0.6);
+}
+
+.transition-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: all 0.8s ease;
+  pointer-events: none;
+}
+
+.transition-card:hover::before {
+  left: 100%;
+}
+
+.transition-type-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  background: rgba(37, 99, 235, 0.8);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.transition-preview {
+  height: 120px;
+  background: linear-gradient(to right, #f9fafb 0%, #60a5fa 50%, #f9fafb 100%);
+  background-size: 200% 100%;
+  animation: shimmer-transition 2s infinite ease-in-out;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+@keyframes shimmer-transition {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.transition-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
+}
+
+/* Special transition selector with better visualization */
+.transition-selector {
+  background: linear-gradient(to right, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 0.5rem;
+  width: 100%;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.transition-selector:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.transition-selector:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+}
+
+/* Optgroup styling */
+.transition-selector optgroup {
+  font-weight: 700;
+  color: #3b82f6;
+  background-color: #eff6ff;
+  padding: 0.5rem;
+}
+
+.transition-selector option {
+  padding: 0.5rem;
+  background-color: white;
+  color: #4b5563;
+  font-weight: 400;
+}
+
+.transition-selector option:checked {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* ===== FRAME RATE SLIDER IMPROVEMENTS ===== */
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(59, 130, 246, 0.2),
+    transparent
+  );
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+.effect-option:hover::after,
+.position-option:hover::after,
+.resolution-option:hover::after {
+  left: 100%;
+}
+
+/* Text color picker with enhanced visual */
+.color-picker-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  height: 40px;
+  width: 40px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.color-preview {
+  margin-left: 10px;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #4b5563;
+  transition: all 0.3s ease;
+}
+
+.color-picker-wrapper:hover .color-preview {
+  background: #e5e7eb;
+}
+
+/* General classes for improved UI feedback */
+.button-hover-effect {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.button-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.12), 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-hover-effect:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.13);
+}
+
+/* Animated gradients for accent elements */
+.animated-gradient {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  background-size: 200% 100%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== RESPONSIVE IMPROVEMENTS FOR VIDEO CREATION TAB ===== */
+
+/* Mobile optimizations for video creation tab */
+@media (max-width: 768px) {
+  /* Reduce padding on mobile for video creation sections */
+  #video-creation-tab .bg-white,
+  #video-creation-tab .bg-gradient-to-r {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Reduce decorative elements size on mobile */
+  #video-creation-tab .absolute.w-20.h-20 {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  #video-creation-tab .absolute.w-16.h-16 {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  /* Stack upload method options vertically on mobile */
+  #video-creation-tab .flex.space-x-4 {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Stack resolution options vertically on small screens */
+  #video-creation-tab .grid.grid-cols-1.sm\\:grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Make special images section single column */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Stack audio upload sections vertically */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Reduce text sizes on mobile */
+  #video-creation-tab h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  #video-creation-tab h2 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  #video-creation-tab h3 {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  /* Adjust image gallery grid for mobile */
+  #video-creation-tab #sortable-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Make form inputs more touch-friendly */
+  #video-creation-tab input[type="file"],
+  #video-creation-tab select,
+  #video-creation-tab button {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  /* Improve button sizes for mobile */
+  #video-creation-tab button[type="submit"] {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  /* Stack first/last transition selectors vertically */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Make timing sliders stack vertically on mobile */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Adjust video generation summary for mobile */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Make step indicators more compact on mobile */
+  .step-indicator {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* Reduce step indicator spacing */
+  #video-creation-tab .flex.items-center.justify-center .w-12 {
+    width: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Even smaller screens - single column layout */
+  #video-creation-tab .grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Single column for image gallery on very small screens */
+  #video-creation-tab #sortable-gallery {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  /* Stack navigation tabs on very small screens */
+  .flex.border-b.border-gray-200 {
+    flex-direction: column;
+  }
+
+  .flex.border-b.border-gray-200 button {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .flex.border-b.border-gray-200 button:last-child {
+    border-bottom: none;
+  }
+
+  /* Reduce step indicator size further */
+  .step-indicator {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+
+  /* Make the step text smaller */
+  #video-creation-tab .text-xs {
+    font-size: 0.625rem;
+  }
+
+  /* Compact timing settings display */
+  #video-creation-tab .timing-card {
+    padding: 0.75rem;
+  }
+
+  /* Reduce spacing in summary sections */
+  #video-creation-tab .space-y-1 > * + * {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Tablet-specific improvements */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Two columns for most grids on tablets */
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #video-creation-tab .grid.grid-cols-1.md\\:grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Three columns for image gallery on tablets */
+  #video-creation-tab #sortable-gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Improve hover states on touch devices */
+@media (hover: hover) {
+  #video-creation-tab .nav-item:hover,
+  #video-creation-tab .bg-white:hover,
+  #video-creation-tab button:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Remove hover effects on touch devices */
+@media (hover: none) {
+  #video-creation-tab .nav-item:hover,
+  #video-creation-tab .bg-white:hover,
+  #video-creation-tab button:hover {
+    transform: none;
+  }
+}
+
+/* Focus improvements for accessibility in video creation tab */
+#video-creation-tab input:focus,
+#video-creation-tab select:focus,
+#video-creation-tab button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Loading states for generate button in video creation */
+#video-creation-tab button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+#video-creation-tab button[type="submit"].loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  margin-left: -0.5rem;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Improved container spacing for video creation tab */
+#video-creation-tab .container,
+#video-creation-tab .max-w-2xl,
+#video-creation-tab .max-w-5xl {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  #video-creation-tab .container,
+  #video-creation-tab .max-w-2xl,
+  #video-creation-tab .max-w-5xl {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* High DPI display improvements for video creation */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  #video-creation-tab img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Enhanced file input styling for mobile */
+@media (max-width: 768px) {
+  #video-creation-tab input[type="file"] {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+
+  #video-creation-tab input[type="file"]::file-selector-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+  }
+}
+
+/* Improve transition selector on mobile */
+@media (max-width: 768px) {
+  #video-creation-tab select[multiple] {
+    height: 150px;
+  }
+
+  #video-creation-tab .transition-selector {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+}
+
+/* ===== END VIDEO CREATION TAB RESPONSIVE IMPROVEMENTS ===== */
+
+/* ===== GENERAL RESPONSIVE IMPROVEMENTS FOR BOTH TABS ===== */
+
+/* Ensure proper touch targets for all interactive elements */
+@media (max-width: 768px) {
+  /* Minimum touch target size for buttons */
+  button,
+  input[type="radio"],
+  input[type="checkbox"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Exception for small decorative elements */
+  .step-indicator {
+    min-height: auto;
+    min-width: auto;
+  }
+
+  /* Improve radio button and checkbox styling on mobile */
+  input[type="radio"],
+  input[type="checkbox"] {
+    transform: scale(1.2);
+    margin: 0.25rem;
+  }
+
+  /* Better spacing for form labels on mobile */
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* Improve text readability on small screens */
+  .text-xs {
+    font-size: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.375;
+  }
+}
+
+/* Print styles optimization */
+@media print {
+  #video-creation-tab {
+    background: white !important;
+    color: black !important;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-br {
+    background: white !important;
+  }
+
+  .shadow-md,
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* Placeholder for dark mode styles */
+  /* Currently not implemented but structure ready */
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  #video-creation-tab {
+    border: 2px solid;
+  }
+
+  button,
+  input,
+  select {
+    border: 2px solid;
+    border-color: ButtonText;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-br {
+    background: ButtonFace !important;
+  }
+}
+
+/* ===== END GENERAL RESPONSIVE IMPROVEMENTS ===== */

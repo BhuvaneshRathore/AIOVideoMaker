@@ -3,6 +3,9 @@ import os
 from generate import generatex
 import datetime
 import json
+import cv2
+import numpy as np
+import random
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -31,8 +34,7 @@ def index():
         
         # Identify new images that aren't in the stored order
         new_images = [img for img in images if img not in valid_stored_images]
-        
-        # Combine the ordered list with any new images
+          # Combine the ordered list with any new images
         images = valid_stored_images + new_images
     
     has_files = images and os.listdir(app.config['UPLOAD_FOLDER_background'])
@@ -54,9 +56,7 @@ def index():
         for file in os.listdir(app.config['UPLOAD_FOLDER_watermark']):
             if file.lower().endswith(('.png', '.jpg', '.jpeg')):
                 watermark_path = os.path.join(app.config['UPLOAD_FOLDER_watermark'], file)
-                custom_watermarks.append((watermark_path, f"Custom: {file}"))
-    
-    # Combine both lists
+                custom_watermarks.append((watermark_path, f"Custom: {file}"))    # Combine both lists
     watermark_files.extend(custom_watermarks)
     
     return render_template('index.html', images=images, has_files=has_files, watermark_files=watermark_files)
@@ -202,7 +202,7 @@ def generate():
     if request.method == 'POST':
         background_file = request.files.get('background')
         
-        # Clear speech directory before adding new file
+        # Clear speech directory before adding new files
         for file in os.listdir(app.config['UPLOAD_FOLDER_speech']):
             os.remove(os.path.join(app.config['UPLOAD_FOLDER_speech'], file))
           # Handle speech file - now optional
@@ -307,15 +307,13 @@ def upload_watermark():
     
     if file.filename == '':
         return "No file selected", 400
-        
+    
     if file and file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER_watermark'], filename))
         return "Success", 200
     else:
         return "Invalid file type", 400
-        
-    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     # Force stdout to be line-buffered to ensure console logs are displayed immediately
